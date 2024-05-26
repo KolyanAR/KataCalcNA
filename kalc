@@ -42,7 +42,7 @@ public class Main {
                 }
             }
         } else {
-            System.out.println("Повторите ввод (напр. 10+9 или IX/III)");
+            System.out.println("Повторите ввод (напр. 5+7 или V*VII)");
         }
     }
     static Integer getOperand(String opStr) {
