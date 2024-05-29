@@ -4,47 +4,74 @@ import java.util.regex.Pattern;
 
 public class Main {
     public static void main(String[] args) {
+
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Введите выражение из двух чисел от 1 до 10 арабскими или римскими");
+        System.out.println("Input");
         String string = scanner.nextLine();
-            String arabic = "\\b([1-9]|10)([-+*/])([1-9]|10)\\b";
-            Pattern patternA = Pattern.compile(arabic);
-
-            String roman = "\\b(I|II|III|IV|V|VI|VII|VIII|IX|X)([-+*/])(I|II|III|IV|V|VI|VII|VIII|IX|X)\\b";
-            Pattern patternR = Pattern.compile(roman);
-        
-        Matcher mA = patternA.matcher(string);
-        Matcher mR = patternR.matcher(string);
-
-        boolean foundA = mA.find();
-        boolean foundR = mR.find();
-    
-        Matcher m = foundA ? mA : foundR ? mR : null;
-
-        if (foundA || foundR) {
-            Integer first = getOperand(m.group(1));
-            String opeR = m.group(2);
-            Integer second = getOperand(m.group(3));
-            Integer result = null;
-            switch (opeR) {
-                case "+" -> result = first + second;
-                case "-" -> result = first - second;
-                case "*" -> result = first * second;
-                case "/" -> result = first / second;
-                default -> {
-                }
-            }
-            if (result != null) {
-                if (foundA) {
-                    System.out.println(result);
-                } else {
-                    System.out.println(convert(result));
-                }
-            }
+        String regexAr = "\\b([1-9]|10)([-+*/])(I|II|III|IV|V|VI|VII|VIII|IX|X)\\b";
+        String regexRa = "\\b(I|II|III|IV|V|VI|VII|VIII|IX|X)([-+*/])([1-9]|10)\\b";
+        Pattern patternAr = Pattern.compile(regexAr);
+        Pattern patternRa = Pattern.compile(regexRa);
+        Matcher mAr = patternAr.matcher(string);
+        Matcher mRa = patternRa.matcher(string);
+        boolean foundAr = mAr.find();
+        boolean foundRa = mRa.find();
+        if (foundAr || foundRa) {
+            System.out.println("throws Exception //т.к. используются одновременно разные системы счисления");
+        }
+        String regexArt = "\\b([1-9]|10)([-+*/])(I|II|III|IV|V|VI|VII|VIII|IX|X)([-+*/])\\b";
+        String regexRat = "\\b(I|II|III|IV|V|VI|VII|VIII|IX|X)([-+*/])([1-9]|10)([-+*/])\\b";
+        String regexAt = "\\b([1-9]|10)([-+*/])([1-9]|10)([-+*/])\\b";
+        String regexRt = "\\b(I|II|III|IV|V|VI|VII|VIII|IX|X)([-+*/])(I|II|III|IV|V|VI|VII|VIII|IX|X)([-+*/])\\b";
+        Pattern patternArt = Pattern.compile(regexArt);
+        Pattern patternRat = Pattern.compile(regexRat);
+        Pattern patternAt = Pattern.compile(regexAt);
+        Pattern patternRt = Pattern.compile(regexRt);
+        Matcher mAt = patternAt.matcher(string);
+        Matcher mRt = patternRt.matcher(string);
+        Matcher mArt = patternArt.matcher(string);
+        Matcher mRat = patternRat.matcher(string);
+        boolean foundArt = mArt.find();
+        boolean foundRat = mRat.find();
+        boolean foundAt = mAt.find();
+        boolean foundRt = mRt.find();
+        if (foundArt || foundRat || foundAt || foundRt) {
+            System.out.println("throws Exception //т.к. формат математической операции не удовлетворяет заданию - два операнда и один оператор (+, -, /, *)");
         } else {
-            System.out.println("Повторите ввод (напр. 5+7 или V*VII)");
+            String regexA = "\\b([1-9]|10)([-+*/])([1-9]|10)\\b";
+            String regexR = "\\b(I|II|III|IV|V|VI|VII|VIII|IX|X)([-+*/])(I|II|III|IV|V|VI|VII|VIII|IX|X)\\b";
+            Pattern patternA = Pattern.compile(regexA);
+            Pattern patternR = Pattern.compile(regexR);
+            Matcher mA = patternA.matcher(string);
+            Matcher mR = patternR.matcher(string);
+            boolean foundA = mA.find();
+            boolean foundR = mR.find();
+            Matcher m = foundA ? mA : foundR ? mR : null;
+            if (foundA || foundR) {
+                Integer first = getOperand(m.group(1));
+                String opeR = m.group(2);
+                Integer second = getOperand(m.group(3));
+                Integer result = null;
+                switch (opeR) {
+                    case "+" -> result = first + second;
+                    case "-" -> result = first - second;
+                    case "*" -> result = first * second;
+                    case "/" -> result = first / second;
+                    default -> {
+                    }
+                }
+                if (result != null) {
+                    if (foundA) {
+                        System.out.println("Результат: " + result);}
+                    else {
+                        System.out.println("Результат: " + convert(result));}
+                }
+            } else {
+                System.out.println("throws Exception //т.к. строка не является математической операцией");
+            }
         }
     }
+
     static Integer getOperand(String opStr) {
         int result;
         try {
@@ -67,8 +94,8 @@ public class Main {
         return result;
     }
     static String convert(int number) {
-        if (number < 0 || number > 100) {
-            return "Это число не может быть преобразовано";
+        if (number < 0) {
+            System.out.println("throws Exception //т.к. в римской системе нет отрицательных чисел");
         }
         String romanOnes = romanDigit(number % 10, "I", "V", "X");
         number /= 10;
@@ -77,7 +104,6 @@ public class Main {
         String romanHundreds = romanDigit(number % 10, "C", "", "");
         return romanHundreds + romanTens + romanOnes;
     }
-   
     static String romanDigit(int n, String one, String five, String ten) {
         if (n >= 1) {
             switch (n) {
